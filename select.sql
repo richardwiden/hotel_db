@@ -34,8 +34,8 @@ from BOOK_GUEST;
 select B.RESERVATION, count(b.CHARGE_CODE) from BOOK_GUEST left join BILL B on BOOK_GUEST.RESERVATION = B.RESERVATION group by B.RESERVATION;
 select B.RESERVATION, count(b.CHARGE_CODE) from BOOK_GUEST left join BILL B on BOOK_GUEST.RESERVATION = B.RESERVATION group by B.RESERVATION having count(b.CHARGE_CODE)>10;
 
-select * from Bo
 
+-- Joins
 select count(*) from BOOK_GUEST BG left outer join BILL B on BG.RESERVATION = B.RESERVATION;
 select count(*) from BOOK_GUEST BG inner join BILL B on BG.RESERVATION = B.RESERVATION;
 
