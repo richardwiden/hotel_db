@@ -1,3 +1,5 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+
 select * from bill;
 select BG.RESERVATION,CHECKIN,CHECKOUT,ARRIVE,DEPART,ON_DATE from bill left join BOOK_GUEST BG on BILL.RESERVATION = BG.RESERVATION;
 select count(*) from bill left join BOOK_GUEST BG on BILL.RESERVATION = BG.RESERVATION;
@@ -32,6 +34,12 @@ from BOOK_GUEST;
 select B.RESERVATION, count(b.CHARGE_CODE) from BOOK_GUEST left join BILL B on BOOK_GUEST.RESERVATION = B.RESERVATION group by B.RESERVATION;
 select B.RESERVATION, count(b.CHARGE_CODE) from BOOK_GUEST left join BILL B on BOOK_GUEST.RESERVATION = B.RESERVATION group by B.RESERVATION having count(b.CHARGE_CODE)>10;
 
+select * from Bo
 
-select count(*) from BOOK_GUEST natural join BILL B;
-select count(*) from BOOK_GUEST left join BILL B on BOOK_GUEST.RESERVATION = B.RESERVATION;
+select count(*) from BOOK_GUEST BG left outer join BILL B on BG.RESERVATION = B.RESERVATION;
+select count(*) from BOOK_GUEST BG inner join BILL B on BG.RESERVATION = B.RESERVATION;
+
+
+--Subselect
+select b.CHARGE_CODE,  from BILL b left join CHARGES c on b.CHARGE_CODE = c.CHARGE_CODE order by c.CHARGE_PRICE;
+select b.CHARGE_CODE from bill b where b.charge_code=(select c.charge_code from charges c order by c.charge_price fetch first row);
