@@ -63,7 +63,8 @@ select * from checked_in_guests;
 create view checked_in_guests as
 select BG.RESERVATION,BG.RESERVED_FNAME,BG.RESERVED_LNAME from BOOK_GUEST BG where checkout is null and HOTELCODE='WIND'
 with check option;
-INSERT INTO checked_in_guests (RESERVED_FNAME,RESERVED_LNAME) values(default,'Richard','Widén')
+--Fails:
+INSERT INTO checked_in_guests (RESERVED_FNAME,RESERVED_LNAME) values('Richard','Widén')
 select * from checked_in_guests;
 
 -- Adding trigger
@@ -89,4 +90,38 @@ end%%%
 INSERT INTO checked_in_guests (RESERVED_FNAME,RESERVED_LNAME) values('Richard','Widén');
 select * from checked_in_guests;
 
---
+-- At the desk of the hotel the staff use a view "free_rooms" to find free
+--rooms, as it is a joinview it is not updatable.
+-- Create a insteadof trigger that allows this!
+create view FREE_ROOMS as
+    select r.roomno,r.hotelcode,t.description from rooms r left join roomtypes t on r.ROOMTYPE = t.ROOMTYPE
+    where r.roomtype=t.roomtype
+    and r.status='FREE';
+select * from FREE_ROOMS;
+
+-- Procedures
+-- Resultset
+@delimiter %%%;
+create procedure hotnames2()
+values (char (15),char(15)) as ("Hotel Name","City")
+reads sql data
+begin
+    declare hot cursor for select NAME,CITY from HOTEL;
+    declare l_nam char (15);
+    declare l_cit char (15);
+    declare l_r integer;
+    open hot;
+    lab1:loop
+        fetch hot into l_nam,l_cit;
+        get diagnostics l_r = row_count;
+        if l_r = 0 then
+            leave lab1;
+        else
+            return l_nam,l_cit;
+        end if;
+    end loop lab1;
+    close hot;
+end%%%
+@delimiter ;
+%%%
+call hotnames2();
